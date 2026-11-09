@@ -59,3 +59,36 @@ function completarTarea(lista: Tarea[], idBuscar: number): Tarea[] {
 const nuevasTareas = completarTarea(misTareas, 2);
 console.log('Original (intacta):', misTareas[1]?.completada); // false
 console.log('Nueva lista:', nuevasTareas[1]?.completada); // true
+
+
+//Reto 3:
+
+class ProductComponent {
+  // 1. Propiedad privada normal (nadie desde fuera puede verla ni tocarla)
+  private iva: number = 0.21;
+
+  // 2. El ATAJO del constructor: 
+  // Al poner 'public' y 'private' aquí dentro de los paréntesis, TypeScript 
+  // crea las variables y les asigna el valor todo de un solo golpe.
+  constructor(
+    public nombreProducto: string, 
+    private precioBase: number
+  ) {}
+
+  // 3. Método público (una función que sí podemos usar desde fuera)
+  public obtenerPrecioFinal(): number {
+    // Para usar el IVA o el precioBase de esta misma clase, usamos la palabra "this" (esto)
+    const calculoIva = this.precioBase * this.iva;
+    return this.precioBase + calculoIva;
+  }
+}
+
+// 4. Fabricamos el objeto usando el plano (la clase)
+const miProducto = new ProductComponent('Zapatillas', 100);
+
+// Comprobaciones:
+console.log(miProducto.nombreProducto); // Perfecto, es public (Zapatillas)
+console.log(miProducto.obtenerPrecioFinal()); // Perfecto, es public (121)
+
+// miProducto.precioBase = 50; 
+// ❌ ERROR: Si descomentas la línea anterior, TS te dirá que "precioBase" es privado.
