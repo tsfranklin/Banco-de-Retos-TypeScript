@@ -29,7 +29,7 @@ function completarTarea(lista, idBuscar) {
 const nuevasTareas = completarTarea(misTareas, 2);
 console.log('Original (intacta):', misTareas[1]?.completada); // false
 console.log('Nueva lista:', nuevasTareas[1]?.completada); // true
-//Reto 3:
+//Reto 3: La Clase Componente y la Encapsulación
 class ProductComponent {
     nombreProducto;
     precioBase;
@@ -54,7 +54,26 @@ const miProducto = new ProductComponent('Zapatillas', 100);
 // Comprobaciones:
 console.log(miProducto.nombreProducto); // Perfecto, es public (Zapatillas)
 console.log(miProducto.obtenerPrecioFinal()); // Perfecto, es public (121)
+// 2. Función inteligente que procesa la respuesta
+function procesarRespuesta(res) {
+    // Si el servidor nos dice que todo fue bien...
+    if (res.status === 'success') {
+        // Tenemos que comprobar que 'data' exista realmente antes de recorrerlo
+        if (res.data) {
+            res.data.forEach(item => {
+                console.log("Dato recibido:", item);
+            });
+        }
+    }
+    // Si el servidor nos dice que hubo un error...
+    else if (res.status === 'error') {
+        console.error("Hubo un fallo:", res.mensajeError);
+    }
+}
+// Probamos que funciona:
+const respuestaBuena = { status: 'success', data: ['Manzana', 'Pera'] };
+procesarRespuesta(respuestaBuena);
+const respuestaMala = { status: 'error', mensajeError: 'No hay conexión' };
+procesarRespuesta(respuestaMala);
 export {};
-// miProducto.precioBase = 50; 
-// ❌ ERROR: Si descomentas la línea anterior, TS te dirá que "precioBase" es privado.
 //# sourceMappingURL=app.js.map

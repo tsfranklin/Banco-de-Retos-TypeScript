@@ -61,7 +61,7 @@ console.log('Original (intacta):', misTareas[1]?.completada); // false
 console.log('Nueva lista:', nuevasTareas[1]?.completada); // true
 
 
-//Reto 3:
+//Reto 3: La Clase Componente y la Encapsulación
 
 class ProductComponent {
   // 1. Propiedad privada normal (nadie desde fuera puede verla ni tocarla)
@@ -92,3 +92,37 @@ console.log(miProducto.obtenerPrecioFinal()); // Perfecto, es public (121)
 
 // miProducto.precioBase = 50; 
 // ❌ ERROR: Si descomentas la línea anterior, TS te dirá que "precioBase" es privado.
+
+
+//Reto 4: Control de Errores con Tipado Restringido
+
+// 1. Interfaz para la respuesta del servidor
+interface RespuestaServidor {
+  status: 'success' | 'error'; // Solo admite estas dos palabras
+  data?: string[];             // Opcional (array de textos)
+  mensajeError?: string;       // Opcional (texto)
+}
+
+// 2. Función inteligente que procesa la respuesta
+function procesarRespuesta(res: RespuestaServidor): void {
+  // Si el servidor nos dice que todo fue bien...
+  if (res.status === 'success') {
+    // Tenemos que comprobar que 'data' exista realmente antes de recorrerlo
+    if (res.data) {
+      res.data.forEach(item => {
+        console.log("Dato recibido:", item);
+      });
+    }
+  } 
+  // Si el servidor nos dice que hubo un error...
+  else if (res.status === 'error') {
+    console.error("Hubo un fallo:", res.mensajeError);
+  }
+}
+
+// Probamos que funciona:
+const respuestaBuena: RespuestaServidor = { status: 'success', data: ['Manzana', 'Pera'] };
+procesarRespuesta(respuestaBuena);
+
+const respuestaMala: RespuestaServidor = { status: 'error', mensajeError: 'No hay conexión' };
+procesarRespuesta(respuestaMala);
