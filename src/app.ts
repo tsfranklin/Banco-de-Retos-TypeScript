@@ -126,3 +126,37 @@ procesarRespuesta(respuestaBuena);
 
 const respuestaMala: RespuestaServidor = { status: 'error', mensajeError: 'No hay conexión' };
 procesarRespuesta(respuestaMala);
+
+// Reto 5: Clases Heredadas y el uso de super()
+// 1. La clase Madre (Base)
+class ServicioDatos {
+  // Tiene una propiedad pública para guardar la URL (endpoint)
+  constructor(public endpoint: string) {}
+
+  // Tiene un método que cualquier clase hija heredará automáticamente
+  public conectar(): void {
+    console.log("Conectando a " + this.endpoint);
+  }
+}
+
+// 2. La clase Hija
+// Usamos "extends" para decirle que herede todo de "ServicioDatos"
+class ServicioUsuarios extends ServicioDatos {
+  public entidad: string;
+
+  constructor(endpointPropio: string) {
+    // Obligatorio: "super()" llama al constructor de la clase madre y le pasa el endpoint.
+    // Si no pones super(), TypeScript te da un error.
+    super(endpointPropio); 
+    
+    // Una vez la madre está lista, inicializamos las cosas exclusivas de la hija
+    this.entidad = 'usuarios';
+  }
+}
+
+// Comprobación:
+const servicio = new ServicioUsuarios('https://mi-api.com/api/v1');
+
+// ¡Magia! La clase hija puede usar el método conectar() porque lo heredó de su madre
+servicio.conectar(); 
+console.log("Gestionando la entidad:", servicio.entidad);
